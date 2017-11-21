@@ -1,5 +1,5 @@
 /*
-tag: 最短路 spfa 优化
+tag: 最短路 spfa 优化 负权回路
  */
 #include <iostream>
 #include <algorithm>
@@ -22,6 +22,7 @@ struct vertex
 int n,m,E_num;
 
 bool v[maxn];  //visited or not
+int times[maxn]; // visited times
 int dis[maxn]; //distance from S to i
 
 void addedge(int u,int v,int l) //directed graph
@@ -37,6 +38,7 @@ void init()
     for(int i=1;i<=n;i++)
     {
 	v[i]=false;
+	times[i]=0;
 	dis[i]=~0u>>1;  //INT_MAX
 	V[i].next=NULL;
     }
@@ -44,11 +46,12 @@ void init()
 int spfa(int S, int T)
 {
     deque <int> q;  // for SLF
-    q.push_back(S); v[S]=true; dis[S]=0;
+    q.push_back(S); v[S]=true; dis[S]=0; times[S]=1;
     while(!q.empty())
     {
         int now=q.front();
         q.pop_front();
+	if(times[now]>n) return -2; // 负权回路
 	for(Edge *p=V[now].next;p;p=p->next)
         {
             if(dis[now]+p->w<dis[p->to])
@@ -59,6 +62,7 @@ int spfa(int S, int T)
 		    if(dis[p->to]<=dis[now]) q.push_front(p->to); // Small Label First
 		    else q.push_back(p->to);
                     v[p->to]=true;
+		    times[p->to]++;
                 }
             }
         }
