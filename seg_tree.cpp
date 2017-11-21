@@ -10,13 +10,13 @@ struct seg
 int n;
 void lazy_down(int now,int len)
 {
-    s[now*2].lazy   += s[now].lazy;
+    s[now*2].lazy   += s[now].lazy; //lazy down
     s[now*2+1].lazy += s[now].lazy;
 
-    s[now*2].w   += (len-len/2)*s[now].lazy;
+    s[now*2].w   += (len-len/2)*s[now].lazy; // add lazy
     s[now*2+1].w += len/2*s[now].lazy;
     
-    s[now].lazy=0;
+    s[now].lazy=0; // reset lazy
 }
 void build(int now,int l,int r)
 {
@@ -28,7 +28,7 @@ void build(int now,int l,int r)
     int m=(l+r)/2;
     build(now*2,l,m);
     build(now*2+1,m+1,r);
-    s[now].w = s[now*2].w + s[now*2+1].w;
+    s[now].w = s[now*2].w + s[now*2+1].w; // !!
 }
 void add(int now,int l,int r,int ql,int qr,int A)
 {
@@ -36,13 +36,13 @@ void add(int now,int l,int r,int ql,int qr,int A)
     if(ql<=l && r<=qr)
     {
         s[now].lazy+=A;
-        s[now].w+=A*(r-l+1);
+        s[now].w+=A*(r-l+1); // !!!!!
         return;
     }
     if(s[now].lazy) lazy_down(now,r-l+1);
     if(ql<=m) add(now*2,l,m,ql,qr,A);
     if(qr>m)  add(now*2+1,m+1,r,ql,qr,A);
-    s[now].w = s[now*2].w + s[now*2+1].w;
+    s[now].w = s[now*2].w + s[now*2+1].w; // !!
 }
 int query(int now,int l,int r,int ql,int qr)
 {
@@ -66,21 +66,16 @@ int main()
     init();
     build(1,1,n);
     char op[10];
-    int x,y;
+    int x,y,z;
     while(cin>>op)
     {
-	if(op[0]=='E') break;
-	if(op[0]=='A')
+	if(op[0]=='e') break;
+	if(op[0]=='a')
 	{
-	    scanf("%d%d",&x,&y);
-	    add(1,1,n,x,x,y);
+	    scanf("%d%d%d",&x,&y,&z);
+	    add(1,1,n,x,y,z);
 	}
-	else if(op[0]=='S')
-	{
-	    scanf("%d%d",&x,&y);
-	    add(1,1,n,x,x,-y);
-	}
-	else if(op[0]=='Q')
+	else if(op[0]=='q')
 	{
 	    scanf("%d%d",&x,&y);
 	    cout<<query(1,1,n,x,y)<<endl;

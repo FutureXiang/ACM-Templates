@@ -21,7 +21,7 @@ int find(int x)
 void kruskal()
 {
     int ans=0;
-    for(int i=1;i<=n;i++) f[i]=i;
+    for(int i=1;i<=n;i++) f[i]=i; //initialize
     sort(s+1,s+m+1,cmp_edge);
 
     for(int i=1;i<=m;i++)
@@ -34,7 +34,7 @@ void kruskal()
 	    f[q]=p;
 	}
     }
-    bool flag=true;
+    bool flag=true; // is connected?
     for(int i=1;i<n;i++)
     {
 	if(find(i)!=find(i+1)) 
@@ -43,8 +43,8 @@ void kruskal()
             break;
 	}
     }
-    if(flag)printf("%d\n",ans);
-    else printf("?\n");
+    if(flag)printf("%d\n",ans); // min sum
+    else printf("?\n"); // is not connected
 }
 int main()
 {
