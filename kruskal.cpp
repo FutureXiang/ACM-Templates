@@ -1,3 +1,6 @@
+/*
+tag: 贪心 最小生成树 并查集 MST mst kruskal 最大边最小
+ */
 #include <iostream>
 #include <algorithm>
 #include <cstdio>

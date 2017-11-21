@@ -1,3 +1,6 @@
+/*
+tag: gcd 最大公约数 最大公因子 辗转 大数
+ */
 #include <iostream>
 #include <algorithm>
 using namespace std;

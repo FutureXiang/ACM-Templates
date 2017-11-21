@@ -1,3 +1,6 @@
+/*
+tag: 最短路 spfa 优化
+ */
 #include <iostream>
 #include <algorithm>
 #include <cstdio>

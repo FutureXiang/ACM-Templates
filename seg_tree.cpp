@@ -1,3 +1,6 @@
+/*
+tag: 线段树 seg 区间修改 区间查询 逆序 全局第k大数
+ */
 #include <iostream>
 #include <cstring>
 #include <cstdio>
