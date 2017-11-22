@@ -1,13 +1,14 @@
 /*
-tag: 树链剖分 维护 树上 修改 边权 点权 线段树
+tag: 树链剖分 维护 树上 修改 边权 点权 线段树 最大值
  */
 #include <iostream>
-#include <cstdio>
 #include <climits>
+#include <string>
+#include <cstdio>
 #include <cstring>
 using namespace std;
-const int maxn=1003;
-const int maxm=1003;
+const int maxn=30004;
+const int maxm=90004;
 
 int flag[maxn],value[maxn],temp[maxn];
 int n,eid_num,E_num;
@@ -21,7 +22,7 @@ struct vertex
 {
     edge *next;
     int size,fa,dep,son; // dfs1
-    int top,eid;// dfs2, eid=ID( Edge(u,u[fa]) )
+    int top,eid;// dfs2, eid=ID(u) 根据访问顺序
 }V[maxn];
 
 //--------------------------- segment tree start
@@ -45,7 +46,7 @@ void build(int now,int l,int r)
     if(l==r)
     {
         s[now].mmax=s[now].w=temp[++eid_num]; //线段树下标是eid
-	return;
+        return;
     }
     int m=(l+r)/2;
     build(now*2,l,m);
@@ -99,7 +100,7 @@ void init()
     {
 	V[i].next=NULL;
 	V[i].size=V[i].son=V[i].fa=V[i].dep=V[i].top=V[i].eid=0;
-	flag[i]=0;
+	flag[i]=temp[i]=0;
     }
     for(int i=1;i<=n*3;i++)
     {
@@ -119,11 +120,11 @@ void input()
     int a,b,c;
     for(int i=1;i<=n-1;i++)
     {
-	scanf("%d%d%d",&a,&b,&c);
+	scanf("%d%d",&a,&b);
 	addedge(a,b);
 	addedge(b,a);
-	value[b]=c; // edge(b,a), a=b.fa
     }
+    for(int i=1;i<=n;i++) scanf("%d",&value[i]);
     V[1].fa=-1; V[1].dep=1; V[1].top=1;
 }
 void dfs1(int u) // generate size, fa, dep, son.
@@ -177,12 +178,7 @@ void dfs2(int u) // generate son, eid, top.
 	}
     }
 }
-void in_seg()
-{
-    eid_num=0; // for putting into segment tree
-    for(int i=2;i<=n;i++)
-	temp[V[i].eid]=value[i]; // edge[i.eid]=edge(i, i.fa)
-}
+
 void print1()
 {
     for(int i=1;i<=n;i++)
@@ -204,20 +200,20 @@ int path_sum(int a,int b) //PATH From A to B
 	int t1=V[a].top,t2=V[b].top;
 	if(t1==t2) //同一条链上
 	{
-	    if(V[a].eid<V[b].eid) ans+=query(1,1,n-1,V[a].eid+1,V[b].eid,0);
-	    if(V[a].eid>V[b].eid) ans+=query(1,1,n-1,V[b].eid+1,V[a].eid,0);
+	    if(V[a].eid<=V[b].eid) ans+=query(1,1,n,V[a].eid,V[b].eid,0);
+	    if(V[a].eid>V[b].eid) ans+=query(1,1,n,V[b].eid,V[a].eid,0);
 	    break;
 	}
 	else
 	{
 	    if(V[t1].dep<=V[t2].dep)
 	    {
-		ans+=query(1,1,n-1,V[t2].eid,V[b].eid,0);
+		ans+=query(1,1,n,V[t2].eid,V[b].eid,0);
 		b=V[t2].fa;
 	    }
 	    else
 	    {
-		ans+=query(1,1,n-1,V[t1].eid,V[a].eid,0);
+		ans+=query(1,1,n,V[t1].eid,V[a].eid,0);
 		a=V[t1].fa;
 	    }
 	}
@@ -232,20 +228,20 @@ int path_max(int a,int b) //PATH From A to B
 	int t1=V[a].top,t2=V[b].top;
 	if(t1==t2) //同一条链上
 	{
-	    if(V[a].eid<V[b].eid) ans=max(ans,query(1,1,n-1,V[a].eid+1,V[b].eid,1));
-	    if(V[a].eid>V[b].eid) ans=max(ans,query(1,1,n-1,V[b].eid+1,V[a].eid,1));
+	    if(V[a].eid<=V[b].eid) ans=max(ans,query(1,1,n,V[a].eid,V[b].eid,1));
+	    if(V[a].eid>V[b].eid) ans=max(ans,query(1,1,n,V[b].eid,V[a].eid,1));
 	    break;
 	}
 	else
 	{
 	    if(V[t1].dep<=V[t2].dep)
 	    {
-		ans=max(ans,query(1,1,n-1,V[t2].eid,V[b].eid,1));
+		ans=max(ans,query(1,1,n,V[t2].eid,V[b].eid,1));
 		b=V[t2].fa;
 	    }
 	    else
 	    {
-		ans=max(ans,query(1,1,n-1,V[t1].eid,V[a].eid,1));
+		ans=max(ans,query(1,1,n,V[t1].eid,V[a].eid,1));
 		a=V[t1].fa;
 	    }
 	}
@@ -259,21 +255,26 @@ void path_add(int a,int b,int A)
         int t1=V[a].top,t2=V[b].top;
         if(t1==t2) //同一条链上
         {
-            if(V[a].eid<V[b].eid) add(1,1,n-1,V[a].eid+1,V[b].eid,A);
-            if(V[a].eid>V[b].eid) add(1,1,n-1,V[b].eid+1,V[a].eid,A);
+            if(V[a].eid<=V[b].eid) add(1,1,n,V[a].eid,V[b].eid,A);
+            if(V[a].eid>V[b].eid) add(1,1,n,V[b].eid,V[a].eid,A);
             break;
         }
         else if(V[t1].dep<=V[t2].dep)
         {
-            add(1,1,n-1,V[t2].eid,V[b].eid,A);
+            add(1,1,n,V[t2].eid,V[b].eid,A);
             b=V[t2].fa;
         }
         else
         {
-            add(1,1,n-1,V[t1].eid,V[a].eid,A);
+            add(1,1,n,V[t1].eid,V[a].eid,A);
             a=V[t1].fa;
         }
     }
+}
+void in_seg()
+{
+    for(int i=1;i<=n;i++)
+	temp[V[i].eid]=value[i]; //原本为节点号，现在是eid
 }
 int main()
 {
@@ -284,8 +285,10 @@ int main()
     dfs1(1);
     dfs2(1);
 
+    for(int i=1;i<=n;i++) V[i].eid++; // 为了适应线段树从1开始
+    eid_num=0;
     in_seg();
-    build(1,1,n-1);
+    build(1,1,n); //以点的eid为下标
 
     int a,b;
     int Q;
@@ -298,12 +301,12 @@ int main()
 	if(op[0]=='m') printf("%d\n", path_max(a, b));
 	else if(op[0]=='s') printf("%d\n", path_sum(a, b));
 	else if(op[0]=='c')
-	{
-	    int c;
-	    scanf("%d",&c);
-	    path_add(a,b,c);
-	}
+	    path_add(a,a,b-path_sum(a,a)); //改成b
     }
-     return 0;
+    return 0;
 }
-
+/* 注意
+max时要取INT_MIN，可能有负数
+点老id和eid之间的转换
+线段树下标是eid
+*/
