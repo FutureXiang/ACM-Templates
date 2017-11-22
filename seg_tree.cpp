@@ -35,6 +35,7 @@ void build(int now,int l,int r)
 }
 void add(int now,int l,int r,int ql,int qr,int A)
 {
+    if(ql>qr) swap(ql,qr);
     int m=(l+r)/2;
     if(ql<=l && r<=qr)
     {
@@ -49,6 +50,7 @@ void add(int now,int l,int r,int ql,int qr,int A)
 }
 int query(int now,int l,int r,int ql,int qr)
 {
+    if(ql>qr) swap(ql,qr);
     int ans=0;
     if(ql<=l && r<=qr) return s[now].w;
     int m=(l+r)/2;
