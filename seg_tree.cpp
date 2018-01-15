@@ -41,7 +41,7 @@ void build(int now,int l,int r)
 }
 void add(int now,int l,int r,int ql,int qr,int A)
 {
-    if(ql>qr) swap(ql,qr);
+    if(r<ql||l>qr) return;
     int m=(l+r)/2;
     if(ql<=l && r<=qr)
     {
@@ -50,7 +50,7 @@ void add(int now,int l,int r,int ql,int qr,int A)
 	s[now].mmax+=A;
         return;
     }
-    if(s[now].lazy) lazy_down(now,r-l+1);
+    if(s[now].lazy&&l!=r) lazy_down(now,r-l+1);
     if(ql<=m) add(now*2,l,m,ql,qr,A);
     if(qr>m)  add(now*2+1,m+1,r,ql,qr,A);
     s[now].w = s[now*2].w + s[now*2+1].w; // !!
@@ -58,11 +58,11 @@ void add(int now,int l,int r,int ql,int qr,int A)
 }
 int query(int now,int l,int r,int ql,int qr, int flag) //flag=0: sum; 1:max
 {
-    if(ql>qr) swap(ql,qr);
+    if(r<ql||l>qr) return 0;
     int ans=0, mmax=INT_MIN;
     if(ql<=l && r<=qr) return flag==0?s[now].w:s[now].mmax;
     int m=(l+r)/2;
-    if(s[now].lazy) lazy_down(now,r-l+1);
+    if(s[now].lazy&&l!=r) lazy_down(now,r-l+1);
     if(flag==0)
     {
         if(ql<=m) ans += query(now*2,l,m,ql,qr,flag);
