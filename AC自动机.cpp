@@ -74,7 +74,7 @@ int query(const string &q)
 	int res=0;
 	for(auto &ch:q)
 	{
-		while(node && !tr[node].next[ch-'a']) node=tr[node].fail;
+		while(node!=root && !tr[node].next[ch-'a']) node=tr[node].fail;
 		if(tr[node].next[ch-'a'])
 		{
 			node=tr[node].next[ch-'a'];
