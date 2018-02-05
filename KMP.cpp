@@ -4,40 +4,46 @@
 #include <algorithm>
 #include <cstring>
 using namespace std;
-char a[100005],b[10004];
+const int maxL=100005;
+const int maxl=10004;
+char a[maxL],b[maxl];
 int la,lb;
-int next[10004];
-
-// http://www.matrix67.com/blog/archives/115
-
-int main()
+int nxt[maxl];
+void get_next()
+{
+    int j=0;
+    for(int i=1;i<lb;i++) // preprocess "next array"
+    {
+	    while(j>0&&b[i]!=b[j]) j=nxt[j-1]; // j-1!
+	    if(b[i]==b[j]) j++;
+	    nxt[i]=j;
+    }
+}
+void readin()
 {
     scanf("%s%s",a,b);
     la=strlen(a);
     lb=strlen(b);
-    memset(next,0,sizeof(next));
-    
+    memset(nxt,0,sizeof(nxt));
+}
+int main()
+{
+    readin();
+    get_next();
     int j=0;
-    for(int i=1;i<lb;i++) // preprocess "next array": for shifting string b
-    {
-	while(j>0&&b[i]!=b[j]) j=next[j-1]; // j-1!
-	if(b[i]==b[j]) j++;
-	next[i]=j;
-    }
-
-    j=0; // updating j
     int cnt=0;
     for(int i=0;i<la;i++)
     {
-	while(j>0&&a[i]!=b[j]) j=next[j-1]; // j-1! (restore j->j-1->next[j-1])
-	if(a[i]==b[j])j++;
-	if(j==lb)
-	{
-	    printf("start with %d\n",i-lb+1);
-	    cnt++;
-	    j=next[j-1]; // j-1!
-	}
+        while(j>0 && a[i]!=b[j]) j=nxt[j-1]; // j-1! (restore j->j-1->nxt[j-1])
+        if(a[i]==b[j]) j++;
+        if(j==lb)
+        {
+            printf("start with %d\n",i-lb+1);
+            cnt++;
+            j=nxt[j-1]; // j-1!
+        }
     }
-    printf("%d\n",cnt);
+    printf("Appeared %d times.\n",cnt);
+    getchar();getchar();
     return 0;
 }
