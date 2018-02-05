@@ -11,13 +11,15 @@ struct trie
 	int cnt_str;
 	int f,fail;
 	char ch;
-}tr[100000];
-int root=0,num,N;
-void insert(const string &in)
+}tr[1003];
+int root=0,num,N,CharNum;
+int TrieG[102][102];
+void insert(const char *in)
 {
 	int now=1;
-	for(auto &ch:in)
+	for(int i=0;i<strlen(in);++i)
 	{
+		char ch=in[i];
 		if(!tr[now].next[ch-'a'])
 		{
 			tr[now].next[ch-'a']=++num;
@@ -54,7 +56,7 @@ void calc_fail()
 						break;
 					}
 				}
-				if(is_find)break;
+				if(is_find) break;
 			}
 			tr[now].fail=result; // (son of root).fail=root.
 #ifdef DEBUG
@@ -64,7 +66,12 @@ void calc_fail()
 		for(int i=0;i<26;i++)
 		{
 			if(tr[now].next[i])
+			{
 				q.push(tr[now].next[i]);
+				TrieG[now][i]=tr[now].next[i];
+			}
+			else
+				TrieG[now][i]=TrieG[tr[now].fail][i]; // Trie Graph: node * Char
 		}
 	}
 }
@@ -100,9 +107,9 @@ void init()
 }
 void readin()
 {
-	string in;
+	char in[100];
 	init();
-	cin>>N;
+	cin>>N>>CharNum;
 	for(int i=1;i<=N;i++)
 	{
 		cin>>in;
@@ -113,9 +120,17 @@ int main()
 {	
 	readin();
 	calc_fail();
+	for(int i=1;i<=num;i++)
+	{
+		cout<<i<<": ";
+		for(int j=0;j<CharNum;j++)
+			cout<<' '<<TrieG[i][j];
+		cout<<endl;
+	}
 	string q;
 	cin>>q;
 	cout<<query(q)<<endl;
 	getchar();getchar();
 	return 0;
 }
+// http://www.cppblog.com/menjitianya/archive/2014/07/10/207604.html
