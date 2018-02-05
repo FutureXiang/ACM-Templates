@@ -40,7 +40,7 @@ int main()
         {
             printf("start with %d\n",i-lb+1);
             cnt++;
-            j=nxt[j-1]; // j-1!
+            j=nxt[j-1]; // j-1!，以便继续匹配。令j=0，如果要求不重叠的话。
         }
     }
     printf("Appeared %d times.\n",cnt);
