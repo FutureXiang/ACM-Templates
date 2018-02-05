@@ -63,7 +63,7 @@ void calc_fail()
 			cout<<now<<' '<<tr[now].fail<<endl;
 #endif
 		}
-		for(int i=0;i<26;i++)
+		for(int i=0;i<CharNum;i++)
 		{
 			if(tr[now].next[i])
 			{
@@ -89,9 +89,9 @@ int query(const string &q)
 			while(tmp!=root)
 			{
 				res+=tr[tmp].cnt_str;
-#ifdef DEBUG
+				#ifdef DEBUG
 				if(tr[tmp].cnt_str) cout<<"ended with :"<<ch<<endl;
-#endif
+				#endif
 				tmp=tr[tmp].fail;
 				//tr[tmp].cnt_str=0; // 相同的只算一次的话
 			}
@@ -116,6 +116,7 @@ void readin()
 		insert(in);
 	}
 }
+int TrieCount[1003][1003];
 int main()
 {	
 	readin();
@@ -124,7 +125,17 @@ int main()
 	{
 		cout<<i<<": ";
 		for(int j=0;j<CharNum;j++)
+		{
 			cout<<' '<<TrieG[i][j];
+			TrieCount[i][TrieG[i][j]?TrieG[i][j]:1]++;
+		}
+		cout<<endl;
+	}
+	for(int i=1;i<=num;i++)
+	{
+		cout<<i<<": ";
+		for(int j=1;j<=num;j++)
+			cout<<' '<<TrieCount[i][j];
 		cout<<endl;
 	}
 	string q;
