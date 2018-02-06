@@ -48,7 +48,7 @@ void dijkstra(int S)
             if(dis[v]>r)
             {
                 dis[v]=r;
-                q.push(P(v,dis[v]));
+                q.push(P(dis[v],v));
             }
         }
     }
