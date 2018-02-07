@@ -1,5 +1,5 @@
 /*
-tag: 最短路 spfa 优化 负权回路
+tag: 最短路 spfa
  */
 #include <iostream>
 #include <algorithm>
@@ -37,10 +37,10 @@ void init()
 {
     for(int i=1;i<=n;i++)
     {
-	v[i]=false;
-	times[i]=0;
-	dis[i]=~0u>>1;  //INT_MAX
-	V[i].next=NULL;
+        v[i]=false;
+        times[i]=0;
+        dis[i]=~0u>>1;  //INT_MAX
+        V[i].next=NULL;
     }
 }
 int spfa(int S, int T)
@@ -51,18 +51,18 @@ int spfa(int S, int T)
     {
         int now=q.front();
         q.pop_front();
-	if(times[now]>n) return -2; // 负权回路
-	for(Edge *p=V[now].next;p;p=p->next)
+	    if(times[now]>n) return -2; // 负权回路
+	    for(Edge *p=V[now].next;p;p=p->next)
         {
             if(dis[now]+p->w<dis[p->to])
             {
                 dis[p->to]=dis[now]+p->w;
                 if(!v[p->to])
                 {
-		    if(dis[p->to]<=dis[now]) q.push_front(p->to); // Small Label First
-		    else q.push_back(p->to);
+		            if(dis[p->to]<=dis[now]) q.push_front(p->to); // Small Label First
+		            else q.push_back(p->to);
                     v[p->to]=true;
-		    times[p->to]++;
+		            times[p->to]++;
                 }
             }
         }
@@ -75,16 +75,16 @@ int main()
 {
     while(cin>>n>>m) // multi cases
     {
-	init();
-	int u,v,l;
-	for(int i=1;i<=m;i++)
-	{
-	  cin>>u>>v>>l;
-	  addedge(u,v,l); // directed edge
-	}
-	int S,T;
-	cin>>S>>T; // Source & Target
-	cout<<spfa(S,T)<<endl;
+	    init();
+        int u,v,l;
+        for(int i=1;i<=m;i++)
+        {
+            cin>>u>>v>>l;
+            addedge(u,v,l); // directed edge
+        }
+        int S,T;
+        cin>>S>>T; // Source & Target
+        cout<<spfa(S,T)<<endl;
     }
     return 0;
 }
