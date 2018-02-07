@@ -35,9 +35,6 @@ void dijkstra(int S)
     for(int i=1;i<=n;i++) dis[i]=INT_MAX;
     dis[S]=0;
     memset(v,0,sizeof v);
-    v[S]=1;
-    for(Edge *p=V[S].next;p;p=p->next)
-        dis[p->to]=min(p->w,dis[p->to]);
     for(int i=1;i<=n;++i)
     {
         int dmin=INT_MAX,dt=-1;
