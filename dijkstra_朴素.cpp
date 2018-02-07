@@ -19,7 +19,7 @@ struct vertex
     Edge *next;
 }V[maxn];
 int dis[maxn];
-int v[maxn];
+bool v[maxn];
 int n,m,num;
 void addedge(int x,int y,int l)
 {
