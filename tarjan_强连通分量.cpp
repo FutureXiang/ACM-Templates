@@ -1,5 +1,5 @@
 /*
-tag: 强连通分量 tarjan 缩点 有向图 dfs
+tag: 强连通分量 tarjan 缩点 有向图 dfs 入度 出度
  */
 #include<iostream>
 #include<cstring>
@@ -14,18 +14,18 @@ int cnt_dfs;
 int stack[maxn],cnt_stack;
 bool instack[maxn];
 
-struct edge
+struct Edge
 {
     int to;
-    edge *next;
+    Edge *next;
 }E[maxm];
 struct vertex
 {
-    edge *next;
+    Edge *next;
 }V[maxn];
 void addedge(int a,int b)
 {
-    edge *p=&E[++E_num];
+    Edge *p=&E[++E_num];
     p->to=b;
     p->next=V[a].next;
     V[a].next=p;
@@ -36,7 +36,7 @@ void tarjan(int u)
     dfn[u]=low[u]=++cnt_dfs;
     stack[++cnt_stack]=u;
     instack[u]=true;
-    for(edge *p=V[u].next;p;p=p->next)
+    for(Edge *p=V[u].next;p;p=p->next)
     {
         int v=p->to;
         if(dfn[v]==0) // not visited
@@ -69,10 +69,10 @@ void init()
     E_num=0;
     for(int i=1;i<=n;i++) 
     {
-	V[i].next=0;
-	dfn[i]=low[i]=0;
-	instack[i]=false;
-	stack[i]=0;
+        V[i].next=0;
+        dfn[i]=low[i]=0;
+        instack[i]=false;
+        stack[i]=0;
     }
     cnt_dfs=cnt_stack=0;
 }
@@ -80,6 +80,7 @@ void init()
 int main()
 {
     scanf("%d%d",&n,&m);
+    init();
     int a,b;
     for(int i=1;i<=m;i++)
     {
@@ -87,6 +88,7 @@ int main()
         addedge(a,b);
     }
     tarjan(1); //有时不连通，有时不从1开始.注意判断!
+    getchar();getchar();
     return 0;
 }
 /*
