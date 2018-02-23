@@ -27,11 +27,12 @@ P solve(int a,int b,int c)
 {
 	int d=gcd(a,b);
 	P result;
-    result=ex_gcd(a,b);
-	if(c%d==0) //d|c
+    result=ex_gcd(a,b); // ax + by = d
+	if(c%d==0)          // d | c
 	{
 		int temp=(result.first*(c/d))%b;
-		while(temp<=0)temp+=b;
+		while(temp<=0) temp+=b/d;
+        while(temp-b/d>0) temp-=b/d;
 		return P(temp,(c-a*temp)/b);
 	}
 	else return P(-1,-1);
