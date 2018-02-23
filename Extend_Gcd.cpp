@@ -5,8 +5,21 @@
 using namespace std;
 int gcd(int x,int y)
 {
-	if(y==0) return x;
-	return gcd(y,x%y);
+    if(x<y)return gcd(y,x);
+    if(!y)return x;
+    else
+    {
+	if(x/2*2==x)
+	{
+	    if(y/2*2==y) return(gcd(x>>1,y>>1)<<1);
+	    else return gcd(x>>1,y);
+	}
+	else
+	{
+	    if(y/2*2==y)return gcd(x,y>>1);
+	    else return gcd(y,x-y);
+	}
+    }
 }
 typedef pair<int,int> P;
 P ex_gcd(int i,int j)
@@ -28,12 +41,12 @@ P solve(int a,int b,int c)
 	int d=gcd(a,b);
 	P result;
     result=ex_gcd(a,b); // ax + by = d
-	if(c%d==0)          // d | c
+	if(c/d*d==c)          // d | c
 	{
-		int temp=(result.first*(c/d))%b;
+		int temp=((long long)result.first*(c/d))%b;
 		while(temp<=0) temp+=b/d;
         while(temp-b/d>0) temp-=b/d;
-		return P(temp,(c-a*temp)/b);
+		return P(temp,(c-(long long)a*temp)/b);
 	}
 	else return P(-1,-1);
 }
